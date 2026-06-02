@@ -2,6 +2,9 @@ from utils import ler_inteiro
 from random import randint, choices
 from time import sleep
 from equipamento import Equipamento
+from status_effects import GerenciadorEfeitos
+from passives import ArvorePassivas
+from magic import SistemaInteligencia
 
 class Jogador:
     def __init__(self, nome, hp):
@@ -9,11 +12,14 @@ class Jogador:
         self.hp = hp
         self.hp_max = hp
         self.ouro = 50
+        self.nucleos_monstro = 0  # Para upgrade de equipamentos no Ferreiro
         self.danobase = 10
         self.agilidadebase = 0
         self.defesabase = 0
+        self.inteligencia = 0  # Atributo para magia
         self.armadura = None
         self.inventario = []
+        self.consumiveis = []
 
         self.nivel = 1
         self.exp = 0
@@ -27,6 +33,15 @@ class Jogador:
         self.buff_dano = 0
         self.buff_agilidade = 0
         self.buff_defesa = 0
+        
+        # Sistema de efeitos de status
+        self.efeitos = GerenciadorEfeitos()
+        
+        # Árvore de Passivas
+        self.passivas = ArvorePassivas()
+        
+        # Sistema de Magia
+        self.magia = SistemaInteligencia(inteligencia=self.inteligencia, mana_base=20)
 
     def d20(self):
         print("Rolando dado de agilidade...")
@@ -108,6 +123,46 @@ class Jogador:
             if self.inventario[opc].tipo in ("arma", "anel", "armadura"):
                 self.equipar(self.inventario[opc])
     
+    def adicionar_consumivel(self, consumivel):
+        """Adiciona um item consumível ao inventário."""
+        self.consumiveis.append(consumivel)
+    
+    def usar_consumivel(self, indice):
+        """Usa um consumível pelo índice."""
+        if indice < 0 or indice >= len(self.consumiveis):
+            print("❌ Consumível inválido!")
+            return False
+        
+        consumivel = self.consumiveis[indice]
+        resultado = consumivel.usar(self)
+        
+        if resultado:
+            self.consumiveis.pop(indice)
+            return True
+        return False
+    
+    def mostrar_consumiveis(self):
+        """Exibe os consumíveis disponíveis."""
+        if not self.consumiveis:
+            print("Nenhum consumível no inventário.")
+            return None
+        
+        print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        print("🧪 CONSUMÍVEIS")
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        for i, consumivel in enumerate(self.consumiveis):
+            print(f"[{i}] {consumivel.nome} - {consumivel.descricao}")
+        print(f"[{len(self.consumiveis)}] Voltar")
+        
+        opc = ler_inteiro("Qual consumível quer usar? ")
+        if opc == len(self.consumiveis):
+            return None
+        if opc < 0 or opc >= len(self.consumiveis):
+            print("❌ Opção inválida!")
+            return None
+        
+        return opc
+
     def mostrar_status(self):
         dano_extra = 0
         agil_extra = 0

@@ -7,3 +7,4 @@ class Equipamento:
         self.agilidade = agilidade
         self.defesa = defesa  # Para que esta linha funcione
         self.tipo = tipo
+        self.nivel_upgrade = 0  # Sistema de upgrade do Ferreiro

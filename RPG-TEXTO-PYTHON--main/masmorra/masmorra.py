@@ -1,6 +1,7 @@
 from random import randint, choice
 from time import sleep
-from monstro import Monstro
+from monstro import Monstro, Boss
+from events import GerenciadorEventos, verificar_sala_secreta
 
 class Masmorra:
     def __init__(self, jogadores):
@@ -9,6 +10,7 @@ class Masmorra:
         self.sala_atual = 0
         self.total_salas = 0
         self.monstros_atuais = []
+        self.gerenciador_eventos = GerenciadorEventos()
         
         self.temas_andares = [
             "Cavernas Esquecidas",
@@ -54,14 +56,38 @@ class Masmorra:
         return "SALA"
 
     def gerar_evento(self):
+        # Verificar se é a última sala - gerar Boss
+        if self.sala_atual == self.total_salas:
+            self.evento_boss()
+            return
+        
+        # Verificar sala secreta
+        if self.jogadores and verificar_sala_secreta(self.jogadores[0]):
+            print("\n✨ Você detecta uma sala secreta!")
+            if input("Deseja entrar? (s/n): ").lower() == 's':
+                self.gerenciador_eventos.evento_sala_secreta(self.jogadores[0])
+                return
+        
         rolagem = randint(1, 100)
         
-        if rolagem <= 40:
+        if rolagem <= 30:
             self.evento_combate()
-        elif rolagem <= 65:
+        elif rolagem <= 50:
             self.evento_tesouro()
-        elif rolagem <= 85:
+        elif rolagem <= 65:
             self.evento_armadilha()
+        elif rolagem <= 75:
+            # Novo: Evento de Enigma
+            if self.jogadores:
+                self.gerenciador_eventos.evento_enigma(self.jogadores[0])
+        elif rolagem <= 85:
+            # Novo: Evento de NPC Perdido
+            if self.jogadores:
+                self.gerenciador_eventos.evento_npc_perdido(self.jogadores[0])
+        elif rolagem <= 92:
+            # Novo: Sala de Acampamento
+            if self.jogadores:
+                self.gerenciador_eventos.evento_acampamento(self.jogadores[0])
         else:
             print("🕯️ Sala segura. Vocês descansam.")
             for j in self.jogadores:
@@ -69,6 +95,18 @@ class Masmorra:
                     cura = randint(5, 15)
                     j.hp = min(j.hp_max, j.hp + cura)
             print("💚 Todos recuperaram HP.")
+    
+    def evento_boss(self):
+        """Evento especial para o Boss de Andar."""
+        print(f"\n{'🔥'*30}")
+        print(f"⚠️  ENCONTRO FINAL - BOSS DO ANDAR {self.andar_atual}!")
+        print(f"{'🔥'*30}\n")
+        sleep(2)
+        
+        boss = Boss(self.andar_atual)
+        boss.mostrar_status()
+        
+        self.monstros_atuais = [boss]
 
     def evento_combate(self):
         qtd_monstros = randint(1, 2) if self.andar_atual < 3 else randint(1, 3)

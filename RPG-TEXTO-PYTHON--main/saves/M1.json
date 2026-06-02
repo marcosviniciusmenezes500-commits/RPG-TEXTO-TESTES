@@ -1,0 +1,65 @@
+{
+    "data_salvo": "2026-06-02T19:20:05.588431",
+    "jogadores": [
+        {
+            "nome": "1",
+            "hp": 25,
+            "hp_max": 25,
+            "ouro": 30,
+            "nucleos_monstro": 0,
+            "danobase": 15,
+            "agilidadebase": 5,
+            "defesabase": 1,
+            "nivel": 1,
+            "exp": 0,
+            "exp_max": 100,
+            "pontos_status": 0,
+            "habilidade_usada_andar": false,
+            "buff_dano": 0,
+            "buff_agilidade": 0,
+            "buff_defesa": 0,
+            "arma": {
+                "nome": "Espada de Fogo 🔥",
+                "dano": 15,
+                "valor": 30,
+                "agilidade": 0,
+                "defesa": 0,
+                "tipo": "arma",
+                "nivel_upgrade": 0
+            },
+            "armadura": {
+                "nome": "Armadura com Espinhos 🦔",
+                "dano": 2,
+                "valor": 40,
+                "agilidade": 0,
+                "defesa": 5,
+                "tipo": "armadura",
+                "nivel_upgrade": 0
+            },
+            "anel": null,
+            "inventario": [
+                {
+                    "nome": "Espada de Fogo 🔥",
+                    "dano": 15,
+                    "valor": 30,
+                    "agilidade": 0,
+                    "defesa": 0,
+                    "tipo": "arma",
+                    "nivel_upgrade": 0
+                },
+                {
+                    "nome": "Armadura com Espinhos 🦔",
+                    "dano": 2,
+                    "valor": 40,
+                    "agilidade": 0,
+                    "defesa": 5,
+                    "tipo": "armadura",
+                    "nivel_upgrade": 0
+                }
+            ],
+            "consumiveis": []
+        }
+    ],
+    "andar_atual": 1,
+    "sala_atual": 0
+}

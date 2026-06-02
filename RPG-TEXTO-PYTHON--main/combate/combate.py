@@ -8,6 +8,17 @@ class Combate:
         self.monstros = monstros
         self.alvo = None
 
+    def aplicar_efeitos_inicio_turno(self):
+        """Aplica efeitos de status ao jogador no início do turno."""
+        print(f"\n--- Efeitos de Status em {self.jogador.nome} ---")
+        self.jogador.efeitos.aplicar_efeitos_inicio_turno(self.jogador)
+        
+        # Verificar se está morto após efeitos
+        if self.jogador.hp <= 0:
+            print(f"\n💀 {self.jogador.nome} sucumbiu aos efeitos de status!")
+            return False
+        return True
+
     def escolher_alvo(self):
         print("\n--- ESCOLHA SEU ALVO ---")
         alvos_disponiveis = []
@@ -35,6 +46,16 @@ class Combate:
             print("❌ Alvo inválido!")
 
     def ataque_jogador(self):
+        # Aplicar efeitos de status no início do turno
+        if not self.aplicar_efeitos_inicio_turno():
+            return  # Jogador morreu por efeitos
+        
+        # Verificar se está atordoado
+        if self.jogador.efeitos.esta_atordoado():
+            print(f"\n😵 {self.jogador.nome} está atordoado e não consegue agir!")
+            sleep(1)
+            return
+        
         self.escolher_alvo()
         
         print(f"\n{'='*40}")
@@ -42,12 +63,20 @@ class Combate:
         sleep(1)
 
         d20_ataque = self.jogador.d20()
+        
+        # Aplicar modificador de ataque por efeitos
+        modificadores = self.jogador.efeitos.obter_modificadores()
+        d20_ataque_modificado = int(d20_ataque * modificadores["ataque"])
 
-        if d20_ataque > 10:
+        if d20_ataque_modificado > 10:
             d10 = self.jogador.d10()
-            dano = self.jogador.danotot(d10, d20_ataque)
-            self.alvo.hp -= dano
-            print(f"💥 SUCESSO! {self.alvo.nome} sofreu {dano} de dano!")
+            dano = self.jogador.danotot(d10, d20_ataque_modificado)
+            
+            # Aplicar modificador de dano por efeitos
+            dano_final = int(dano * modificadores["dano"])
+            
+            self.alvo.hp -= dano_final
+            print(f"💥 SUCESSO! {self.alvo.nome} sofreu {dano_final} de dano!")
         else:
             print("❌ FALHA! O ataque não atingiu!")
 
