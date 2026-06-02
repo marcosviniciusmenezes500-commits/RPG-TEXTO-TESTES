@@ -1,69 +1,85 @@
-# RPG-TEXTO-PYTHON🎮
-Esse é um RPG de texto feito em Python, ele não tem visual nem sprites, criei esse projeto com o objetivo de melhorar minha lógica de programação e aprender programação orientada a objeto.
+# ⚔️ FENDA DE ÉBANO - RPG de Texto 🏰
 
-<img width="720" height="480" alt="20250607_0025_Programador Mágico em Ação_remix_01jx46nz02eq8s040y2hz9svmz" src="https://github.com/user-attachments/assets/607a3e7f-fca0-40f8-93b8-4a12975dc48a" />
+Um RPG de texto multijogador em **Python** onde você explora masmorras perigosas, enfrenta monstros, aprende novas habilidades e compete com outros jogadores em um ambiente fantasmagórico!
 
+![RPG Banner](https://github.com/user-attachments/assets/607a3e7f-fca0-40f8-93b8-4a12975dc48a)
 
-🧩 Funcionalidades
+## 🎮 Características Principais
 
-- Sistema de combate com dados 🎲
-- Inventário 🎒
-- Multiplayer local 👥
-- Eventos aleatórios (em breve)
-- Loja (em breve)
-- NPC (em breve)
+- ⚔️ **Sistema de Combate Dinâmico** com dados (D20 + D10)
+- 🏪 **Loja Interativa** para comprar e vender equipamentos
+- 💼 **Inventário Completo** com armas, anéis e armaduras
+- 📊 **Sistema de Níveis e EXP** com crescimento de personagem
+- 🎭 **Origens Únicas** que modificam seus atributos iniciais
+- 🛡️ **5 Classes Diferentes** com habilidades especiais próprias
+- 👥 **Multijogador Local** para 1+ jogadores
+- 🏰 **6 Andares de Masmorra** com dificuldade crescente
+- 🎲 **Eventos Aleatórios** (combates, tesouros, armadilhas)
+- 🌟 **Classe Oculta** desbloqueável
 
-## 🎮 Como funciona o jogo
-o Jogo é de PVP de turnos, Multijogador local , permitindo que vários jogadores joguem na mesma máquina, ou o jogador principal compartilhar sua tela em qualquer software de comunicação (discord, whatsApp,skype e etc) pra jogarem juntos
+## 🎯 Como Jogar
 
-<img width="690" height="215" alt="Captura de tela 2026-05-15 140015" src="https://github.com/user-attachments/assets/6b0b825d-8427-475f-9169-d81d5272dc5a" />
+### Pré-requisitos
+- Python 3.7+
+- Terminal/Console
 
-ao entrar o jogo a primeira coisa que você faz é informar quantos jogadores terão na partida, o nome e o hp deles.
+### Instalação
+```bash
+git clone https://github.com/seu-usuario/RPG-TEXTO-TESTES.git
+cd RPG-TEXTO-TESTES/RPG-TEXTO-PYTHON--main
+python main.py
+```
 
-<img width="807" height="276" alt="Captura de tela 2026-05-15 183248" src="https://github.com/user-attachments/assets/6c5efc13-8331-46a9-9b84-9cb3818b9ab3" />
+## 📋 Controles
 
-essa é a tela principal, onde o jogador poderá ATACAR, ver a LOJA ou ver o INVENTÁRIO
+**🗺️ EXPLORAÇÃO**
+- [1] Avançar para próxima sala
+- [2] Loja do Mercador
+- [3] Ver Inventário
+- [4] Ver Status
+- [5] Distribuir Pontos
+- [6] Passar a vez para outro jogador
 
-## ⚔️COMBATE⚔️
+**🗡️ COMBATE**
+- [1] Atacar
+- [2] Ver Inventário
+- [3] Ver Status
+- [4] Usar Habilidade Especial
 
-No combate o jogador vai jogar o dado de 20 lados (dado de agilidade), se cair um número maior que 10 ele ataca, 
-pra atacar ele vai jogar mais um dado, de 10 lados (dado de ataque), que vai ser o dano do jogador
+## 🛡️ Classes
 
-### Dado de agilidade🎲💨
-o dado de agilidade serve para ver se o jogador vai acertar ou errar o golpe, o bônus de agilidade pode ajudar a acertar os golpes, se o jogador tirar 20 no dado, o dano será dobrado!
+- 🪓 **Bárbaro**: Dano brutal (+10 HP, +3 Força, -2 Defesa)
+- 🛡️ **Guardião**: Resistência pura (+5 HP, +4 Defesa, -2 AGI)
+- 🗡️ **Duelista**: Reflexos perfeitos (+4 AGI, +1 Força, -5 HP)
+- ⚔️ **Vanguarda**: Equilibrado (+2 Força, +1 Defesa, +1 AGI, +3 HP/nível)
+- 🌟 **Herói**: Classe oculta (desbloqueável com origem especial)
 
-### dado de ataque 🎲⚔️
-Define o dano do jogador, somando bônus e equipamentos.
-## 🪙 Loja
+## 🏰 A Masmorra
 
-(em breve)
+6 andares progressivos com eventos aleatórios:
+- **40%** Combate | **25%** Tesouro | **20%** Armadilha | **15%** Descanso
 
-## 🎒 Inventário
-<img width="493" height="302" alt="Captura de tela 2026-05-15 140605" src="https://github.com/user-attachments/assets/50a4a11e-abb4-4998-b07d-9266d50fbd65" />
+## 💡 Dicas
 
-O inventário mostra todos os itens do jogador e permite equipá-los.
+✅ Compre equipamentos estratégicos  
+✅ Use habilidades em momentos críticos  
+✅ Explore todas as salas para tesouros  
+❌ Não venda itens equipados  
+❌ Não ignore defesa em andares profundos
 
-# 🕹️ como posso jogar o jogo? 
+## 🤝 Contribuindo
 
-<img width="720" height="480" alt="Captura de tela 2026-05-15 183953" src="https://github.com/user-attachments/assets/7969432f-5bb2-46b9-9ddb-5a277659bddb" />
+1. Faça um **Fork**
+2. Crie uma branch (`git checkout -b feature/MinhaFeature`)
+3. Commit suas mudanças
+4. Push e abra um **Pull Request**
 
-Você pode baixar todos os arquivos clicando em Code e baixando o zip, depois é só extrair. você precisa ter o Python instalado na sua máquina. pra rodar o jogo é só abrir o main.py em alguma IDE (visual studio code, Pycharm e etc) em breve eu vou fazer um .exe do jogo :)
+## 📝 Versão
 
+**Versão 2.0** - Janeiro de 2026 - Engine Refatorizada
 
-# 🤝 ajude na programação
+---
 
-Contribuições são bem-vindas!
+**Desenvolvido por:** [@marcosviniciusmenezes500-commits](https://github.com/marcosviniciusmenezes500-commits)
 
-- Faça um fork
-- Crie uma branch
-- Faça alterações
-- Envie um Pull Request
-
-Esse é um projeto feito por um Estudante de programação para outros estudantes ou amantes de programação, então eu te incentivo a baixar o projeto, ver como tudo foi feito, editar o código, fazer testes, crie novas features do seu jeito, você pode até postar no seu github, eu adoraria ver os seus projetos :)
-
-<img width="240" height="240" alt="20260305_1155_Image Generation_remix_01kjz7wh0dft5vsz8pzrwefmyz" src="https://github.com/user-attachments/assets/7bb26727-5383-4634-bcad-ddd379822129" />
-
-
-
-
-
+⭐ Se gostou, deixe uma estrela! ⭐
