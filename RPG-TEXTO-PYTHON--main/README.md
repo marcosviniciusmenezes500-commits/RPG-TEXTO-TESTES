@@ -2,7 +2,6 @@
 
 Um RPG de texto multijogador em **Python** onde você explora masmorras perigosas, enfrenta monstros, aprende novas habilidades e compete com outros jogadores em um ambiente fantasmagórico!
 
-![RPG Banner](https://github.com/user-attachments/assets/607a3e7f-fca0-40f8-93b8-4a12975dc48a)
 
 ## 🎮 Características Principais
 
