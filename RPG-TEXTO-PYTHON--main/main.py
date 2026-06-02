@@ -15,13 +15,19 @@ print("="*50 + "\n")
 # 1. Configurações Iniciais
 while True:
     qj = ler_inteiro("Quantos jogadores teremos na partida? ")
-    if qj >= 2:
+    if qj >= 1:
         break
     print("Erro: O jogo necessita de, pelo menos, 2 jogadores para iniciar.")
 
 # Regista os jogadores com 20 de HP base
 jogadores = Partida.registrar_jogadores(qj=qj, hp=20)
 partida = Partida(jogadores)
+
+# === Sorteio de Origens e Escolha de Classe ===
+for j in jogadores:
+    j.sortear_origem()
+    j.escolher_classe() # O jogador agora escolhe o seu caminho!
+# ==============================================
 
 # 2. Configuração da Loja (O Mercador Errante)
 loja_jogo = Loja()

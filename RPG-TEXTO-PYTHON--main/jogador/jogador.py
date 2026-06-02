@@ -125,7 +125,11 @@ class Jogador :
         print("║      STATUS DO HERÓI     ║")
         print("╚══════════════════════════╝\n")
         
+        origem_personagem = getattr(self, 'origem', 'Desconhecida')
+        classe_personagem = getattr(self, 'classe', 'Aventureiro')
         print(f"Nome: {self.nome} | Nível: {self.nivel}")
+        print(f"Classe: {classe_personagem} | Origem: {origem_personagem}")
+        
         print(f"EXP: {self.exp} / {self.exp_max}")
         print(f"HP (Vida): {self.hp} / {self.hp_max}")
         if self.pontos_status > 0:
@@ -150,13 +154,13 @@ class Jogador :
                 if item.defesa != 0: bonus.append(f"{item.defesa:+d} Defesa")
                 return ", ".join(bonus) if bonus else "+0 Atributos"
 
-            if self.arma:
+            if getattr(self, 'arma', None):
                 print(f"⚔️ {formatar_bonus(self.arma)} ({self.arma.nome})")
                 
-            if self.anel:
+            if getattr(self, 'anel', None):
                 print(f"💍 {formatar_bonus(self.anel)} ({self.anel.nome})")
 
-            if self.armadura:
+            if getattr(self, 'armadura', None):
                 print(f"👕 {formatar_bonus(self.armadura)} ({self.armadura.nome})")
 
         print("\n━━━━━━━━━━━━━━━━━━")
@@ -173,18 +177,27 @@ class Jogador :
         print("\n" + "="*40 + "\n")
 
 
-    def equipar(self,item):
+    def equipar(self, item):
         if item not in self.inventario :
             print(f"{item.nome} Não está no inventário")
             return
+            
         if item.tipo == 'arma' :
             if self.arma :
                 print(f"Desequipando {self.arma.nome}")
             self.arma = item
+            
         elif item.tipo == "anel" :
             if self.anel :
                 print(f"Desequipando {self.anel.nome}")
             self.anel = item
+            
+        # O BLOCO QUE FALTAVA PARA GUARDAR A ARMADURA
+        elif item.tipo == "armadura" :
+            if getattr(self, 'armadura', None): # Verifica com segurança se já tem armadura
+                print(f"Desequipando {self.armadura.nome}")
+            self.armadura = item
+            
         print(f"{self.nome} Equipou {item.nome}")
         
     
@@ -252,14 +265,38 @@ class Jogador :
         sleep(2)
     
     def ganhar_exp(self, quantidade):
-        from time import sleep
-        print(f"\n✨ {self.nome} recebeu {quantidade} pontos de EXP!")
         self.exp += quantidade
-        sleep(1)
+        print(f"🌟 {self.nome} recebeu {quantidade} de EXP!")
         
-        # Verifica se subiu de nível (pode subir mais do que 1 nível de uma vez)
+        # Sistema de Nível
         while self.exp >= self.exp_max:
-            self.subir_nivel()
+            self.exp -= self.exp_max
+            self.nivel += 1
+            self.pontos_status += 3  # Mantém os 3 pontos livres
+            
+            print(f"\n🎉 {self.nome} SUBIU PARA O NÍVEL {self.nivel}!")
+            print("⭐ Você ganhou +3 Pontos de Status livres!")
+            
+            # --- NOVO: Bónus Fixo da Classe ---
+            classe_nome = getattr(self, 'classe', '')
+            
+            if "Bárbaro" in classe_nome:
+                self.danobase += 1
+                print("🪓 Bónus de Bárbaro: +1 Força Base!")
+            elif "Guardião" in classe_nome:
+                self.defesabase += 1
+                print("🛡️ Bónus de Guardião: +1 Defesa Base!")
+            elif "Duelista" in classe_nome:
+                self.agilidadebase += 1
+                print("🗡️ Bónus de Duelista: +1 Agilidade Base!")
+            elif "Vanguarda" in classe_nome:
+                self.hp_max += 3
+                print("⚔️ Bónus de Vanguarda: +3 HP Máximo!")
+            
+            # Restaura o HP ao subir de nível
+            self.hp = self.hp_max 
+            print("💚 HP totalmente restaurado!")
+            print("="*40 + "\n")
             
     def subir_nivel(self):
         from time import sleep
@@ -327,3 +364,161 @@ class Jogador :
         dano_final = max(1, dano_bruto - defesa_total)
         self.hp -= dano_final
         return dano_final
+
+    def sortear_origem(self):
+        from random import choices
+        from time import sleep
+        from equipamento import Equipamento
+
+        origens = [
+            "Mendigo Amaldiçoado", "Desertor Covarde",  # 2 Ruins (25% cada)
+            "Camponês Comum", "Guarda Noturno",         # 2 Normais (15% cada)
+            "Mercenário Veterano", "Assassino das Sombras", # 2 Boas (8% cada)
+            "O Herói Escolhido"                         # 1 Lendária (4%)
+        ]
+        
+        # Pesos em percentagem exata
+        pesos = [25, 25, 15, 15, 8, 8, 4]
+        
+        # choices retorna uma lista, pegamos o primeiro elemento [0]
+        escolha = choices(origens, weights=pesos, k=1)[0]
+        self.origem = escolha
+        
+        print("\n" + "="*50)
+        print(f"🎲 Sorteando o passado de {self.nome}...")
+        sleep(2)
+        print(f"✨ A Roda do Destino parou em: ** {escolha.upper()} **!")
+        
+        if escolha == "Mendigo Amaldiçoado":
+            print("📖 História: Você viveu nas ruas e sobreviveu de restos. Uma bruxa o amaldiçoou, enfraquecendo o seu corpo e alma. A Fenda de Ébano é a sua última chance de redenção na vida.")
+            print("📉 Modificadores: -5 HP Máximo, -2 Força Base, -1 Agilidade.")
+            self.hp_max -= 5
+            self.danobase -= 2
+            self.agilidadebase -= 1
+            
+        elif escolha == "Desertor Covarde":
+            print("📖 História: Quando a guerra estourou, você fugiu na calada da noite e escondeu-se em cavernas. O medo constante tornou-o muito rápido, mas os anos de fuga minaram a sua força.")
+            print("📉 Modificadores: +2 Agilidade, -3 Força Base, -2 HP Máximo.")
+            self.hp_max -= 2
+            self.danobase -= 3
+            self.agilidadebase += 2
+            
+        elif escolha == "Camponês Comum":
+            print("📖 História: Uma vida inteira a arar campos pacíficos. Você não tem nenhum treino militar ou habilidades especiais, mas o trabalho duro debaixo de sol deu-lhe um corpo bastante resistente.")
+            print("⚖️ Modificadores: +5 HP Máximo.")
+            self.hp_max += 5
+            
+        elif escolha == "Guarda Noturno":
+            print("📖 História: Você patrulhava as muralhas de uma vila pequena. Sabe segurar uma arma e defender-se, embora as noites mal dormidas a vigiar portões o tenham deixado com reflexos lentos.")
+            print("⚖️ Modificadores: +1 Força Base, +1 Defesa Base, -1 Agilidade.")
+            self.danobase += 1
+            self.defesabase += 1
+            self.agilidadebase -= 1
+            
+        elif escolha == "Mercenário Veterano":
+            print("📖 História: O seu passado está manchado de sangue em troca de moedas de ouro. A experiência em inúmeras batalhas pelo continente forjou um guerreiro letal, resistente e implacável.")
+            print("📈 Modificadores: +10 HP Máximo, +3 Força Base, +2 Defesa Base.")
+            self.hp_max += 10
+            self.danobase += 3
+            self.defesabase += 2
+            
+        elif escolha == "Assassino das Sombras":
+            print("📖 História: Treinado desde criança por um culto secreto de assassinos, você aprendeu a matar em absoluto silêncio. Os seus reflexos são invejáveis e os seus golpes atingem pontos vitais.")
+            print("📈 Modificadores: +4 Agilidade, +2 Força Base, +1 Defesa Base.")
+            self.agilidadebase += 4
+            self.danobase += 2
+            self.defesabase += 1
+            
+        elif escolha == "O Herói Escolhido":
+            print("📖 História: Marcado pelo destino no momento em que nasceu. As estrelas alinharam-se e as profecias antigas cantam o seu nome. Você é o portador da luz, destinado a purificar a Fenda de Ébano e realizar grandes feitos que ecoarão pela eternidade!")
+            print("🌟 Modificadores: +15 HP Máximo, +5 Força Base, +3 Agilidade, +3 Defesa Base.")
+            self.hp_max += 15
+            self.danobase += 5
+            self.agilidadebase += 3
+            self.defesabase += 3
+            
+            # Equipamento Lendário Exclusivo
+            espada_heroi = Equipamento("Espada do Herói ⚔️🌟", dano=12, valor=100, agilidade=2, defesa=0, tipo="arma")
+            self.inventario.append(espada_heroi)
+            self.equipar(espada_heroi)
+            print("🎁 O destino intercedeu: Você começa com a 'Espada do Herói'! (Pode ser substituída ou aprimorada no futuro).")
+
+        # 1. Garante que atributos base não quebram o jogo (mínimo de 1)
+        self.hp_max = max(1, self.hp_max)
+        self.danobase = max(1, self.danobase)
+        
+        # 2. Cura o jogador para o seu novo HP Máximo real após os cálculos
+        self.hp = self.hp_max
+        print("="*50 + "\n")
+        sleep(2)
+    
+    def escolher_classe(self):
+        from utils import ler_inteiro
+        from time import sleep
+        
+        print(f"\n{'='*50}")
+        print(f"🛡️ O CAMINHO MARCIAL DE {self.nome.upper()} 🛡️")
+        print("Chegou o momento de escolher o seu estilo de combate.")
+        print("Esta escolha definirá os seus atributos iniciais e o seu crescimento a cada nível!\n")
+
+        print("[1] Bárbaro 🪓")
+        print("    Foco: Dano brutal e vida alta. Ignora a própria segurança.")
+        print("    Inicial: +10 HP Máximo, +3 Força Base, -2 Defesa Base.")
+        print("    Por Nível: +1 Força Base.\n")
+
+        print("[2] Guardião 🛡️")
+        print("    Foco: Resistência pura. Uma verdadeira muralha viva.")
+        print("    Inicial: +5 HP Máximo, +4 Defesa Base, -2 Agilidade Base.")
+        print("    Por Nível: +1 Defesa Base.\n")
+
+        print("[3] Duelista 🗡️")
+        print("    Foco: Reflexos perfeitos. Frágil, mas quase intocável.")
+        print("    Inicial: +4 Agilidade Base, +1 Força Base, -5 HP Máximo.")
+        print("    Por Nível: +1 Agilidade Base.\n")
+
+        print("[4] Vanguarda ⚔️")
+        print("    Foco: O soldado perfeito e equilibrado.")
+        print("    Inicial: +2 Força Base, +1 Defesa Base, +1 Agilidade Base.")
+        print("    Por Nível: +3 HP Máximo (ganha mais vida natural por nível).\n")
+
+        while True:
+            opc = ler_inteiro("Qual será a sua Classe? (1 a 4): ")
+            
+            if opc == 1:
+                self.classe = "Bárbaro 🪓"
+                self.hp_max += 10
+                self.danobase += 3
+                self.defesabase -= 2
+                break
+            elif opc == 2:
+                self.classe = "Guardião 🛡️"
+                self.hp_max += 5
+                self.defesabase += 4
+                self.agilidadebase -= 2
+                break
+            elif opc == 3:
+                self.classe = "Duelista 🗡️"
+                self.agilidadebase += 4
+                self.danobase += 1
+                self.hp_max -= 5
+                break
+            elif opc == 4:
+                self.classe = "Vanguarda ⚔️"
+                self.danobase += 2
+                self.defesabase += 1
+                self.agilidadebase += 1
+                break
+            else:
+                print("❌ Opção inválida! Escolha uma classe de 1 a 4.")
+
+        # Travas de segurança para os atributos não ficarem negativos (mínimo de 0 ou 1)
+        self.defesabase = max(0, self.defesabase)
+        self.agilidadebase = max(0, self.agilidadebase)
+        self.danobase = max(1, self.danobase)
+        self.hp_max = max(1, self.hp_max)
+        
+        # Cura totalmente após definir a classe
+        self.hp = self.hp_max
+        
+        print(f"\n✨ O destino está selado! {self.nome} agora é um {self.classe}!")
+        sleep(2)
